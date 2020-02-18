@@ -1,0 +1,6 @@
+Game finished after 3, score: Mia (0), Ben (0)
+Game finished after 2, score: Mia (0), Ben (0)
+Game finished after 37, score: Mia (4), Ben (4)
+Game finished after 26, score: Mia (0), Ben (0)
+Game finished after 21, score: Mia (0), Ben (0)
+Game finished after 49, score: Mia (0), Ben (0)

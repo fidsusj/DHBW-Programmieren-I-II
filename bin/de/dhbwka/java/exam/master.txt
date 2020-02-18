@@ -1,0 +1,219 @@
+---Shortcuts---
+
+	STRG+ALT+DOWN: Duplicate
+
+---Templates---
+
+		Beep
+		Thread
+		Writer
+		Reader
+		JFrame
+		JButton
+
+---Update UI Old---
+
+		if(this.panel != null)
+			this.frame.remove(panel);
+		this.panel = createPanel();
+		this.frame.add(panel);
+		this.frame.repaint();
+		this.frame.setVisible(true);
+		
+---Java 8 Datei Zeilen Verarbeiten---
+
+		Stream.of(new File("files").list()).forEach(System.out::println)
+		
+		String[] words = msg.getText().split(" ");
+		Stream.of(words).filter(e -> {
+			return e.startsWith("#");
+		}).filter(e -> {
+			if(e.length() < 4 || this.bannedTags.contains(e)) {
+				return false;
+			}
+			if(this.currentTags.contains(e)) {
+				new Thread(() -> {
+					this.area.setBackground(Color.RED);
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					this.area.setBackground(Color.WHITE);
+				}).start();
+				return false;
+			}
+			boolean valid = true;
+			for (int i = 1; i < 4; i++) {
+				if(!(Character.isAlphabetic(e.charAt(i)) || Character.isDigit(e.charAt(i)))) {
+					valid = false;
+					break;
+				}
+			}
+			return valid;
+		}).sorted((o1,o2) -> {
+			return o1.compareTo(o2);
+		}).forEach(this.currentTags::add);
+		
+---Generics---
+
+		collections -> BinaryTree
+		
+---Enums---
+
+	.values()
+	.ordinal()
+	
+---Threads---
+
+	threads -> buffer -> MyBuffer:  Entweder extends Thread | .start()
+									implements Runnable    | new Thread(...).start();
+									anonyme innere Klasse
+		
+---GUI---
+
+		JComboBox<String> comboBox = new JComboBox<String>();     //DropDown
+		
+		button.createToolTip();
+		button.setToolTipText("ToolTip");
+		
+		ButtonGroup buttonGroup = new ButtonGroup();
+		JRadioButton radioButton = new JRadioButton("Radio-Button" + i);
+		buttonGroup.add(radioButton);
+		panel.add(radioButton);
+		
+		ui -> TextfileViewer: Dateiauswahldialog
+		ui -> EditorSimple: Menu
+		ui -> Editor: KeyStrokes
+		ui -> paint -> Election: Component erben, paintComponent(Graphics g) überschreiben, super() in Konstruktor aufrufen
+		
+---JTextPane---
+
+		editPane = new JTextPane();
+		editPane.getDocument().putProperty(DefaultEditorKit.EndOfLineStringProperty, System.lineSeparator());
+		JScrollPane scrollPane = new JScrollPane(editPane);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.add(scrollPane);
+		
+---JOptionPane---
+
+		Input: (Drop Down)
+		String input = JOptionPane.showInputDialog(frame, "message", "title", JOptionPane.QUESTION_MESSAGE);
+					   JOptionPane.showInputDialog(frame, "message", "title", JOptionPane.QUESTION_MESSAGE, null, new String[] {"Eins", "Zwei"},  "Zwei");
+		Message:
+		JOptionPane.showMessageDialog(frame, "message", "title", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(frame, "message");
+		
+		Confirm:
+		JOptionPane.showConfirmDialog(frame, "message", "title", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+		
+		JComponent[] fields = {
+								new JLabel("Suchen: "),
+								suchen,
+								new JLabel("Ersetzen: "),
+								ersetzen
+								};
+		int ok = JOptionPane.showConfirmDialog(frame, fields, "Suchen und Ersetzen", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);	
+		
+		Option: (Buttons)
+		JOptionPane.showOptionDialog(frame, "message", "title", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Eins", "Zwei"},  "Zwei");
+		
+---Comparator---
+
+		collections -> Library		
+		
+---Printf---
+
+		System.out.printf("%-10d | %7.1f \n", f, c);
+	
+---LineNumberReader---
+
+		try(LineNumberReader reader = new LineNumberReader(new FileReader(file))) {
+			reader.skip(content.length());
+			StringBuffer contents = new StringBuffer();
+			do{
+				String content = reader.readLine();
+				if(reader.getLineNumber() > 1) {
+					System.out.println(content);
+					contents.append(content);		
+				}
+			}while(reader.getLineNumber() < 6);
+		}catch(IOException e) {
+			e.printStackTrace();
+			return -1;
+		}
+
+---PrintWriter---
+
+		try(PrintWriter writer = new PrintWriter(new FileWriter(file, true))){		
+			writer.println(name.getText() + ": " + attempts);	
+		} catch (IOException e) {			
+			JOptionPane.showMessageDialog(frame, "Bitte zunächst einen Namen eingeben");
+		}
+
+--Charset---
+		content = new StringBuffer();
+		try(BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))){
+			while(reader.ready()) {
+				content.append(reader.readLine() + "\r\n");
+			}
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+	
+---Available Lines---
+
+		public int availableLines() {
+			try(LineNumberReader reader = new LineNumberReader(new FileReader(file))) {
+				reader.skip(content.length());
+				return reader.getLineNumber() + 1;
+			}catch(IOException e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+		
+		content.toString().split("\r\n").length();
+		
+--JFileChooser---
+
+		JFileChooser fc = new JFileChooser("./files");
+		
+		fc.setFileFilter(new FileFilter() {
+			
+			@Override
+			public String getDescription() {
+				return "Text Files";
+			}
+
+			@Override
+			public boolean accept(File f) {
+				return f.isDirectory() || f.getAbsolutePath().toLowerCase().endsWith(".txt");
+			}
+		});
+		
+		int state = fc.showOpenDialog(frame);
+		if (state == JFileChooser.APPROVE_OPTION) {
+			file = fc.getSelectedFile();
+			try(BufferedReader reader = new BufferedReader(new FileReader(file))){
+				while(reader.ready()) {
+					editPane.setText(editPane.getText() + reader.readLine() + System.lineSeparator());
+				}		
+			} catch (IOException ex) {
+				JOptionPane.showMessageDialog(frame, "Ein Fehler beim Einlesen der Datei ist vorgefallen");
+			}
+		}
+		
+---Sonstiges---
+
+		Double.isNaN(res)
+		
+		A = 65
+		Z = 90
+		a = 97
+		z = 122
+		
+		
+		
+		

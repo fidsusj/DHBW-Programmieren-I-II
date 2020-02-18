@@ -1,0 +1,7 @@
+﻿Felix: 10
+Lars: 10
+Olaf: 11
+Thomas: 13
+Gerhard: 6
+Thorsten: 12
+Felix: 15
